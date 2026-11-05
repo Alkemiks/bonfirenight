@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Vocabulary & Collocations: Bonfire Night & The Gunpowder Plot</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Outfit"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            flame: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+            },
+            night: {
+              950: '#090d16',
+              900: '#0f172a',
+              850: '#1e293b',
+              800: '#334155',
+              700: '#475569',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+    .card-glow {
+      box-shadow: 0 0 35px rgba(249, 115, 22, 0.08), inset 0 0 0 1px rgba(249, 115, 22, 0.18);
+    }
+  </style>
+</head>
+<body class="bg-night-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-flame-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Ambient Particle Canvas (Gentle embers) -->
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="relative z-10 border-b border-night-800 bg-night-900/85 backdrop-blur-md sticky top-0 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-flame-500/20 border border-flame-500/40 flex items-center justify-center text-flame-400">
+        <i data-lucide="sparkles" class="w-5 h-5 animate-pulse"></i>
+      </div>
+      <div>
+        <h1 class="font-display font-bold text-sm sm:text-base text-amber-200 tracking-wide">VOCABULARY &amp; COLLOCATIONS</h1>
+        <p class="text-xs text-slate-400 hidden sm:block">Master Key Words in Natural English Phrases</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <button id="btn-open-wordlist" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-flame-500/30 bg-flame-500/10 hover:bg-flame-500/20 text-flame-300 text-xs sm:text-sm font-medium transition-all">
+        <i data-lucide="book-marked" class="w-4 h-4"></i>
+        <span>Word Bank (<span id="wordbank-count">10</span>)</span>
+      </button>
+      <button id="btn-sound-toggle" aria-label="Toggle sound fx" class="p-2 rounded-lg border border-night-700 bg-night-850 hover:bg-night-800 text-slate-400 hover:text-amber-200 transition-colors">
+        <i data-lucide="volume-2" id="sound-icon" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+
+    <!-- Screen 1: Welcome & Overview -->
+    <section id="screen-welcome" class="space-y-8 py-6 text-center animate-fadeIn">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-flame-500/30 bg-flame-950/40 text-flame-400 text-xs tracking-wider uppercase font-semibold">
+        <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+        Interactive Collocation Quiz
+      </div>
+
+      <div class="space-y-4 max-w-xl mx-auto">
+        <h2 class="font-display text-3xl sm:text-5xl font-extrabold text-amber-100 tracking-tight leading-tight">
+          How Well Do You Know the Words?
+        </h2>
+        <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-light">
+          Test your vocabulary and learn how these 10 important words combine naturally with verbs, adjectives, and prepositions in real English sentences.
+        </p>
+      </div>
+
+      <!-- Overview Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left text-xs sm:text-sm">
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="puzzle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">Common Collocations</h3>
+            <p class="text-slate-400 text-xs mt-1">Discover paired words like <em>commit treason</em> and <em>burn an effigy</em>.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">10 Core Words</h3>
+            <p class="text-slate-400 text-xs mt-1">Practise each word in clear, authentic sentence contexts.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">Instant Explanations</h3>
+            <p class="text-slate-400 text-xs mt-1">Get immediate feedback with easy-to-remember usage tips.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Button -->
+      <div class="pt-2">
+        <button id="btn-start" class="group relative inline-flex items-center justify-center px-8 py-4 text-base font-display font-bold text-night-950 bg-gradient-to-r from-amber-400 via-flame-400 to-amber-500 rounded-xl shadow-lg shadow-flame-600/30 hover:shadow-flame-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <span>Start Word Quiz</span>
+          <i data-lucide="arrow-right" class="w-5 h-5 ml-2.5 transition-transform group-hover:translate-x-1"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 2: Active Quiz Question -->
+    <section id="screen-quiz" class="hidden space-y-6">
+      
+      <!-- Progress Bar & Score -->
+      <div class="bg-night-900/80 border border-night-800 rounded-2xl p-4 backdrop-blur-md space-y-3">
+        <div class="flex items-center justify-between text-xs sm:text-sm">
+          <div class="flex items-center space-x-2">
+            <span id="badge-question-num" class="font-display font-bold text-amber-300">Word 1 of 10</span>
+            <span class="text-slate-600">•</span>
+            <span id="badge-target-word" class="text-slate-300 font-medium">Target Word</span>
+          </div>
+          <div class="flex items-center text-amber-300 font-semibold">
+            <i data-lucide="star" class="w-4 h-4 mr-1 text-amber-400"></i>
+            <span>Score: <span id="score-counter">0</span></span>
+          </div>
+        </div>
+        <div class="w-full bg-night-800 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-flame-500 transition-all duration-300 rounded-full" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-night-900/90 border border-night-800 rounded-2xl p-5 sm:p-7 card-glow space-y-5">
+        
+        <!-- Target Word Collocation Pill -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-night-950/70 border border-night-800">
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-1 rounded-md bg-flame-500/20 text-flame-300 text-xs font-bold font-mono tracking-wide uppercase">Word Focus</span>
+            <span id="pill-target-word" class="text-amber-200 font-display font-bold text-base sm:text-lg">bonfire</span>
+          </div>
+          <div class="flex items-center space-x-1.5 text-xs text-slate-400">
+            <i data-lucide="link" class="w-3.5 h-3.5 text-flame-400"></i>
+            <span id="pill-collocation-hint" class="italic">Collocation focus</span>
+          </div>
+        </div>
+
+        <!-- Question Title / Fill-in-the-blank Sentence -->
+        <div class="space-y-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Choose the natural collocation:</span>
+          <h2 id="q-sentence" class="font-display text-lg sm:text-2xl font-bold text-amber-50 leading-snug">
+            Question sentence loading...
+          </h2>
+        </div>
+
+        <!-- Options List -->
+        <div id="options-container" class="space-y-3">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Explanation & Collocation Drawer -->
+        <div id="explanation-box" class="hidden rounded-xl p-4 sm:p-5 border transition-all space-y-4">
+          <div class="flex items-center space-x-2 text-sm font-semibold" id="explanation-header">
+            <i id="explanation-icon" data-lucide="check-circle" class="w-5 h-5"></i>
+            <span id="explanation-status">Feedback status</span>
+          </div>
+          
+          <p id="explanation-text" class="text-sm sm:text-base text-slate-300 leading-relaxed font-light">
+            Explanation text.
+          </p>
+
+          <!-- Easy Collocation Spotlight Box -->
+          <div class="p-3.5 rounded-xl bg-night-950/80 border border-flame-500/30 space-y-2">
+            <div class="flex items-center space-x-2 text-amber-300 text-xs font-bold tracking-wide uppercase">
+              <i data-lucide="sparkles" class="w-4 h-4 text-flame-400"></i>
+              <span>Common Collocations to Remember:</span>
+            </div>
+            <div id="collocation-chips" class="flex flex-wrap gap-2 text-xs sm:text-sm">
+              <!-- Dynamically populated tags -->
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-end">
+            <button id="btn-next" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-flame-500 hover:from-amber-300 hover:to-flame-400 text-night-950 font-display font-bold text-sm shadow-md transition-all flex items-center space-x-2">
+              <span id="next-label">Next Word</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Screen 3: Results -->
+    <section id="screen-results" class="hidden space-y-8 py-6 text-center animate-fadeIn">
+      <div class="p-6 sm:p-10 rounded-2xl bg-night-900/90 border border-night-800 card-glow max-w-xl mx-auto space-y-6">
+        
+        <div class="inline-flex p-3 rounded-full bg-flame-500/10 border border-flame-500/30 text-amber-400 mx-auto">
+          <i data-lucide="award" class="w-9 h-9"></i>
+        </div>
+
+        <div class="space-y-2">
+          <span class="text-xs uppercase font-bold tracking-widest text-slate-400">Vocabulary Mastered</span>
+          <h2 id="final-title" class="font-display text-2xl sm:text-3xl font-bold text-amber-100">
+            Great Achievement!
+          </h2>
+          <div class="text-4xl sm:text-6xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-flame-400 to-amber-500 my-3">
+            <span id="final-score">0</span><span class="text-2xl sm:text-3xl text-slate-500 font-light">/10</span>
+          </div>
+          <p id="final-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+            You now know the meanings and natural collocations of all 10 key terms!
+          </p>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button id="btn-restart" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-flame-500 text-night-950 font-display font-bold text-sm transition-all flex items-center justify-center space-x-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span>Retake Quiz</span>
+          </button>
+          <button id="btn-review-bank" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-night-700 bg-night-850 hover:bg-night-800 text-slate-200 font-semibold text-sm transition-all flex items-center justify-center space-x-2">
+            <i data-lucide="book-marked" class="w-4 h-4"></i>
+            <span>Browse Word Bank</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Word Bank Modal -->
+  <div id="modal-wordlist" class="fixed inset-0 z-50 bg-night-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-night-900 border border-night-750 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <div class="px-6 py-4 border-b border-night-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="book-marked" class="w-5 h-5 text-flame-400"></i>
+          <h2 class="font-display font-bold text-lg text-amber-100">Word Bank &amp; Easy Collocations</h2>
+        </div>
+        <button id="btn-close-wordlist" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-night-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-4 text-sm" id="wordbank-items-container">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="px-6 py-3 border-t border-night-800 bg-night-950/50 flex justify-end">
+        <button id="btn-close-wordlist-bottom" class="px-4 py-1.5 rounded-lg bg-night-800 hover:bg-night-700 text-slate-200 text-xs font-medium">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer -->
+  <script>
+    class SoundFx {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      }
+      playCorrect() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, t);
+          osc.frequency.exponentialRampToValueAtTime(880, t + 0.2);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.3);
+        } catch(e) {}
+      }
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, t);
+          osc.frequency.exponentialRampToValueAtTime(110, t + 0.25);
+          gain.gain.setValueAtTime(0.1, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.25);
+        } catch(e) {}
+      }
+    }
+    const sound = new SoundFx();
+  </script>
+
+  <!-- Quiz Data & Logic -->
+  <script>
+    // 10 Words from the glossary tested in natural collocation contexts
+    const vocabQuizData = [
+      {
+        id: 1,
+        targetWord: "bonfire",
+        collocationHint: "verb + bonfire",
+        sentence: "When darkness fell in November, the villagers gathered in the park to _____ a huge bonfire.",
+        options: [
+          { text: "light", correct: true },
+          { text: "cook", correct: false },
+          { text: "explode", correct: false },
+          { text: "invent", correct: false }
+        ],
+        explanation: "We naturally say 'to light a bonfire' (or 'build a bonfire'). You don't 'cook' or 'invent' a fire.",
+        collocations: ["light a bonfire", "build a bonfire", "gather around the bonfire", "bonfire embers"]
+      },
+      {
+        id: 2,
+        targetWord: "plot",
+        collocationHint: "verb + plot",
+        sentence: "The King's ministers managed to _____ a dangerous plot before anyone was hurt.",
+        options: [
+          { text: "uncover", correct: true },
+          { text: "invite", correct: false },
+          { text: "forget", correct: false },
+          { text: "borrow", correct: false }
+        ],
+        explanation: "When a secret conspiracy is revealed, we say authorities 'uncover a plot', 'discover a plot', or 'foil a plot'.",
+        collocations: ["uncover a plot", "foil a plot", "hatch a secret plot", "conspiracy plot"]
+      },
+      {
+        id: 3,
+        targetWord: "mastermind",
+        collocationHint: "mastermind + of",
+        sentence: "Robert Catesby was the _____ behind the entire gunpowder conspiracy.",
+        options: [
+          { text: "mastermind", correct: true },
+          { text: "spectator", correct: false },
+          { text: "stranger", correct: false },
+          { text: "tourist", correct: false }
+        ],
+        explanation: "The person who conceives and directs a complex plan is described as 'the mastermind behind' the plan.",
+        collocations: ["the mastermind behind...", "criminal mastermind", "to mastermind an operation"]
+      },
+      {
+        id: 4,
+        targetWord: "effigy",
+        collocationHint: "verb + in effigy",
+        sentence: "On November 5th, it became a common tradition to burn the traitor _____.",
+        options: [
+          { text: "in effigy", correct: true },
+          { text: "in secret", correct: false },
+          { text: "in fashion", correct: false },
+          { text: "in person", correct: false }
+        ],
+        explanation: "When people burn a dummy or model of a disliked figure, the set collocation is 'to burn someone in effigy'.",
+        collocations: ["burn someone in effigy", "a straw effigy", "carry an effigy", "create a life-size effigy"]
+      },
+      {
+        id: 5,
+        targetWord: "treason",
+        collocationHint: "verb + treason",
+        sentence: "Trying to blow up the King and Parliament was an act of high _____.",
+        options: [
+          { text: "treason", correct: true },
+          { text: "holiday", correct: false },
+          { text: "charity", correct: false },
+          { text: "honour", correct: false }
+        ],
+        explanation: "The formal legal term for betraying your country or monarch is 'high treason'. We say someone 'commits treason' or is 'guilty of high treason'.",
+        collocations: ["commit high treason", "accused of treason", "an act of treason", "guilty of treason"]
+      },
+      {
+        id: 6,
+        targetWord: "cellar",
+        collocationHint: "preposition + the cellar",
+        sentence: "Thirty-six barrels of gunpowder were secretly hidden _____ the cellar of the House of Lords.",
+        options: [
+          { text: "down in", correct: true },
+          { text: "up on", correct: false },
+          { text: "skyward of", correct: false },
+          { text: "around with", correct: false }
+        ],
+        explanation: "A cellar is underground, so in English we naturally speak of being 'down in the cellar' or 'searching the dark cellars'.",
+        collocations: ["down in the cellar", "vaulted stone cellar", "search the cellar", "cellar storage"]
+      },
+      {
+        id: 7,
+        targetWord: "anonymous",
+        collocationHint: "anonymous + noun",
+        sentence: "Lord Monteagle received an _____ letter warning him to stay away from Parliament.",
+        options: [
+          { text: "anonymous", correct: true },
+          { text: "expensive", correct: false },
+          { text: "electric", correct: false },
+          { text: "uncomfortable", correct: false }
+        ],
+        explanation: "When a message has no signed name, it is an 'anonymous letter' or 'anonymous tip'.",
+        collocations: ["an anonymous letter", "anonymous tip", "remain anonymous", "anonymous caller"]
+      },
+      {
+        id: 8,
+        targetWord: "tradition",
+        collocationHint: "verb + a tradition",
+        sentence: "Every year, British families _____ the tradition of watching fireworks together on a cold autumn evening.",
+        options: [
+          { text: "keep up", correct: true },
+          { text: "turn off", correct: false },
+          { text: "drop out", correct: false },
+          { text: "wash away", correct: false }
+        ],
+        explanation: "We frequently use 'keep up a tradition' or 'follow a tradition' to mean continuing an established cultural custom.",
+        collocations: ["keep up a tradition", "follow a tradition", "by tradition", "a longstanding tradition"]
+      },
+      {
+        id: 9,
+        targetWord: "ceremony",
+        collocationHint: "verb + a ceremony",
+        sentence: "Before the monarch enters Parliament, the royal guards _____ a formal search ceremony in the cellars.",
+        options: [
+          { text: "carry out", correct: true },
+          { text: "cancel off", correct: false },
+          { text: "sleep through", correct: false },
+          { text: "look down", correct: false }
+        ],
+        explanation: "In English, we say guards or officials 'carry out a ceremony', 'perform a ceremony', or 'attend an annual ceremony'.",
+        collocations: ["carry out a ceremony", "perform a ceremony", "an annual ceremony", "ceremony of state"]
+      },
+      {
+        id: 10,
+        targetWord: "symbol",
+        collocationHint: "verb + a symbol of",
+        sentence: "Today, the Guy Fawkes smiling mask has become a worldwide _____ of protest and freedom of speech.",
+        options: [
+          { text: "symbol", correct: true },
+          { text: "ingredient", correct: false },
+          { text: "station", correct: false },
+          { text: "receipt", correct: false }
+        ],
+        explanation: "An object representing an idea is 'a symbol of' something (e.g. 'a symbol of freedom' or 'a powerful symbol').",
+        collocations: ["a symbol of protest", "a powerful symbol", "serve as a symbol", "status symbol"]
+      }
+    ];
+
+    const wordBankData = [
+      {
+        word: "Bonfire",
+        def: "A large outdoor fire built to burn wood and celebrate autumn festivals.",
+        collocations: ["light a bonfire", "build a bonfire", "gather around the bonfire"]
+      },
+      {
+        word: "Plot",
+        def: "A secret plan made by a group to do something dangerous or illegal.",
+        collocations: ["uncover a plot", "foil a plot", "hatch a secret plot"]
+      },
+      {
+        word: "Mastermind",
+        def: "The person who plans and directs a complicated operation.",
+        collocations: ["the mastermind behind...", "criminal mastermind", "mastermind a plan"]
+      },
+      {
+        word: "Effigy",
+        def: "A model or dummy of a person, traditionally burned on the fire.",
+        collocations: ["burn someone in effigy", "a straw effigy", "carry an effigy"]
+      },
+      {
+        word: "Treason",
+        def: "The serious crime of trying to harm the monarch or overthrow the state.",
+        collocations: ["commit high treason", "accused of treason", "guilty of treason"]
+      },
+      {
+        word: "Cellar",
+        def: "An underground storage space beneath a historic building.",
+        collocations: ["down in the cellar", "search the cellars", "vaulted stone cellar"]
+      },
+      {
+        word: "Anonymous",
+        def: "Written or done by someone who does not give their name.",
+        collocations: ["an anonymous letter", "anonymous tip", "remain anonymous"]
+      },
+      {
+        word: "Tradition",
+        def: "A custom or festival celebrated regularly over many generations.",
+        collocations: ["keep up a tradition", "by tradition", "a longstanding tradition"]
+      },
+      {
+        word: "Ceremony",
+        def: "A formal historical event with fixed rituals and uniforms.",
+        collocations: ["carry out a ceremony", "perform a ceremony", "an annual ceremony"]
+      },
+      {
+        word: "Symbol",
+        def: "A recognizable image or object that stands for a bigger idea.",
+        collocations: ["a symbol of protest", "a powerful symbol", "serve as a symbol"]
+      }
+    ];
+
+    // State
+    let currentIndex = 0;
+    let score = 0;
+    let hasAnswered = false;
+
+    // DOM Elements
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenQuiz = document.getElementById('screen-quiz');
+    const screenResults = document.getElementById('screen-results');
+
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnNext = document.getElementById('btn-next');
+    const nextLabel = document.getElementById('next-label');
+
+    const badgeQuestionNum = document.getElementById('badge-question-num');
+    const badgeTargetWord = document.getElementById('badge-target-word');
+    const scoreCounter = document.getElementById('score-counter');
+    const progressBar = document.getElementById('progress-bar');
+
+    const pillTargetWord = document.getElementById('pill-target-word');
+    const pillCollocationHint = document.getElementById('pill-collocation-hint');
+    const qSentence = document.getElementById('q-sentence');
+    const optionsContainer = document.getElementById('options-container');
+
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationHeader = document.getElementById('explanation-header');
+    const explanationStatus = document.getElementById('explanation-status');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const explanationText = document.getElementById('explanation-text');
+    const collocationChips = document.getElementById('collocation-chips');
+
+    // Word Bank Modal
+    const modalWordlist = document.getElementById('modal-wordlist');
+    const btnOpenWordlist = document.getElementById('btn-open-wordlist');
+    const btnCloseWordlist = document.getElementById('btn-close-wordlist');
+    const btnCloseWordlistBottom = document.getElementById('btn-close-wordlist-bottom');
+    const btnReviewBank = document.getElementById('btn-review-bank');
+    const wordbankItemsContainer = document.getElementById('wordbank-items-container');
+    const wordbankCount = document.getElementById('wordbank-count');
+
+    // Audio
+    const btnSoundToggle = document.getElementById('btn-sound-toggle');
+    const soundIcon = document.getElementById('sound-icon');
+
+    function initWordBank() {
+      wordbankCount.innerText = wordBankData.length;
+      wordbankItemsContainer.innerHTML = wordBankData.map(item => `
+        <div class="p-4 rounded-xl bg-night-850 border border-night-700/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-display font-bold text-amber-300 text-base sm:text-lg">${item.word}</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-flame-500/20 text-flame-300 uppercase tracking-wider font-semibold">Core Term</span>
+          </div>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">${item.def}</p>
+          <div class="pt-2 border-t border-night-800">
+            <span class="text-xs font-semibold text-slate-400">Easy Collocations: </span>
+            <div class="mt-1.5 flex flex-wrap gap-1.5">
+              ${item.collocations.map(col => `<span class="px-2 py-0.5 rounded-md bg-night-900 border border-night-700 text-amber-200 text-xs font-mono">${col}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderQuestion(index) {
+      hasAnswered = false;
+      const q = vocabQuizData[index];
+
+      badgeQuestionNum.innerText = `Word ${index + 1} of ${vocabQuizData.length}`;
+      badgeTargetWord.innerText = `Target: ${q.targetWord}`;
+      scoreCounter.innerText = score;
+      progressBar.style.width = `${((index + 1) / vocabQuizData.length) * 100}%`;
+
+      pillTargetWord.innerText = q.targetWord;
+      pillCollocationHint.innerText = q.collocationHint;
+      qSentence.innerText = q.sentence;
+
+      explanationBox.classList.add('hidden');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((opt, optIndex) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full text-left p-3.5 sm:p-4 rounded-xl border border-night-800 bg-night-850 hover:bg-night-800 hover:border-flame-500/50 transition-all flex items-start space-x-3.5 group`;
+        btn.setAttribute('data-correct', opt.correct);
+
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-lg bg-night-900 border border-night-700 flex items-center justify-center text-xs font-bold font-display text-amber-300 shrink-0 mt-0.5">
+            ${letters[optIndex]}
+          </span>
+          <span class="text-sm sm:text-base text-slate-200 group-hover:text-amber-100 flex-1 leading-snug">
+            ${opt.text}
+          </span>
+          <div class="feedback-indicator hidden shrink-0 ml-2"></div>
+        `;
+
+        btn.addEventListener('click', () => chooseOption(btn, opt.correct, q));
+        optionsContainer.appendChild(btn);
+      });
+
+      nextLabel.innerText = (index === vocabQuizData.length - 1) ? "View Results" : "Next Word";
+      lucide.createIcons();
+    }
+
+    function chooseOption(selectedBtn, isCorrect, currentQ) {
+      if (hasAnswered) return;
+      hasAnswered = true;
+
+      const allBtns = optionsContainer.querySelectorAll('.option-btn');
+
+      if (isCorrect) {
+        score++;
+        scoreCounter.innerText = score;
+        sound.playCorrect();
+
+        selectedBtn.classList.remove('bg-night-850', 'border-night-800');
+        selectedBtn.classList.add('bg-emerald-950/70', 'border-emerald-500', 'text-white');
+        const indicator = selectedBtn.querySelector('.feedback-indicator');
+        indicator.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-emerald-400"></i>';
+        indicator.classList.remove('hidden');
+
+        explanationBox.classList.remove('hidden');
+        explanationBox.classList.add('bg-emerald-950/30', 'border-emerald-600/40');
+        explanationHeader.className = "flex items-center space-x-2 text-sm font-semibold text-emerald-300";
+        explanationStatus.innerText = "Correct Collocation!";
+        explanationIcon.setAttribute('data-lucide', 'check-circle');
+
+        try {
+          confetti({
+            particleCount: 30,
+            spread: 50,
+            origin: { y: 0.7 },
+            colors: ['#ea580c', '#f59e0b', '#10b981']
+          });
+        } catch(e) {}
+      } else {
+        sound.playWrong();
+
+        selectedBtn.classList.remove('bg-night-850', 'border-night-800');
+        selectedBtn.classList.add('bg-rose-950/70', 'border-rose-500', 'text-white');
+        const indicator = selectedBtn.querySelector('.feedback-indicator');
+        indicator.innerHTML = '<i data-lucide="x" class="w-5 h-5 text-rose-400"></i>';
+        indicator.classList.remove('hidden');
+
+        // Reveal the correct option
+        allBtns.forEach(btn => {
+          if (btn.getAttribute('data-correct') === 'true') {
+            btn.classList.add('bg-emerald-950/40', 'border-emerald-500/70', 'ring-1', 'ring-emerald-500/50');
+            const trueIndicator = btn.querySelector('.feedback-indicator');
+            trueIndicator.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>';
+            trueIndicator.classList.remove('hidden');
+          }
+        });
+
+        explanationBox.classList.remove('hidden');
+        explanationBox.classList.add('bg-rose-950/20', 'border-rose-700/40');
+        explanationHeader.className = "flex items-center space-x-2 text-sm font-semibold text-rose-300";
+        explanationStatus.innerText = "Check this collocation:";
+        explanationIcon.setAttribute('data-lucide', 'help-circle');
+      }
+
+      allBtns.forEach(btn => btn.classList.add('cursor-default'));
+      explanationText.innerText = currentQ.explanation;
+
+      // Collocation chips
+      collocationChips.innerHTML = currentQ.collocations.map(col => `
+        <span class="px-2.5 py-1 rounded-md bg-night-900 border border-flame-500/40 text-amber-200 font-mono text-xs">
+          ${col}
+        </span>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function goToNext() {
+      if (currentIndex < vocabQuizData.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      screenQuiz.classList.add('hidden');
+      screenResults.classList.remove('hidden');
+
+      const finalScore = document.getElementById('final-score');
+      const finalTitle = document.getElementById('final-title');
+      const finalDesc = document.getElementById('final-desc');
+
+      finalScore.innerText = score;
+
+      if (score >= 9) {
+        finalTitle.innerText = "Collocation Champion!";
+        finalDesc.innerText = "Superb! You know exactly how these words pair up and sound completely natural in English sentences.";
+        try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
+      } else if (score >= 6) {
+        finalTitle.innerText = "Solid Word Knowledge!";
+        finalDesc.innerText = "You have a good grasp of the vocabulary. Check the Word Bank to review any collocations you missed.";
+      } else {
+        finalTitle.innerText = "Keep Practising!";
+        finalDesc.innerText = "Collocations take a little time to master. Review the Word Bank and try again to cement these natural pairings!";
+      }
+
+      lucide.createIcons();
+    }
+
+    // Ambient Sparks
+    function initCanvas() {
+      const canvas = document.getElementById('ambient-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      let sparks = [];
+
+      function setSize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', setSize);
+      setSize();
+
+      class Spark {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * w;
+          this.y = h + Math.random() * 40;
+          this.size = Math.random() * 2.5 + 1;
+          this.speedY = Math.random() * 1.2 + 0.4;
+          this.speedX = (Math.random() - 0.5) * 0.7;
+          this.alpha = Math.random() * 0.7 + 0.3;
+          this.hue = Math.random() > 0.4 ? 28 : 42;
+        }
+        update() {
+          this.y -= this.speedY;
+          this.x += this.speedX;
+          this.alpha -= 0.003;
+          if (this.alpha <= 0 || this.y < -10) this.reset();
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 95%, 55%, ${this.alpha})`;
+          ctx.fill();
+        }
+      }
+
+      const sparkCount = Math.min(Math.floor(window.innerWidth / 18), 45);
+      for (let i = 0; i < sparkCount; i++) sparks.push(new Spark());
+
+      function loop() {
+        ctx.clearRect(0, 0, w, h);
+        sparks.forEach(s => { s.update(); s.draw(); });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // Listeners
+    btnStart.addEventListener('click', () => {
+      sound.init();
+      screenWelcome.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+      renderQuestion(0);
+    });
+
+    btnNext.addEventListener('click', goToNext);
+
+    btnRestart.addEventListener('click', () => {
+      score = 0;
+      currentIndex = 0;
+      screenResults.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+      renderQuestion(0);
+    });
+
+    function openWordBank() {
+      modalWordlist.classList.remove('hidden');
+      modalWordlist.classList.add('flex');
+    }
+    function closeWordBank() {
+      modalWordlist.classList.add('hidden');
+      modalWordlist.classList.remove('flex');
+    }
+
+    btnOpenWordlist.addEventListener('click', openWordBank);
+    btnCloseWordlist.addEventListener('click', closeWordBank);
+    btnCloseWordlistBottom.addEventListener('click', closeWordBank);
+    btnReviewBank.addEventListener('click', openWordBank);
+    modalWordlist.addEventListener('click', (e) => {
+      if (e.target === modalWordlist) closeWordBank();
+    });
+
+    btnSoundToggle.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      if (sound.enabled) {
+        soundIcon.setAttribute('data-lucide', 'volume-2');
+        soundIcon.classList.remove('text-red-400');
+      } else {
+        soundIcon.setAttribute('data-lucide', 'volume-x');
+        soundIcon.classList.add('text-red-400');
+      }
+      lucide.createIcons();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initWordBank();
+      initCanvas();
+    });
+  </script>
+</body>
+</html>
