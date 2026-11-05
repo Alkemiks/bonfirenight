@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Bonfire Night: Discover Britain's Famous November Tradition</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Outfit"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            flame: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+            },
+            night: {
+              950: '#0b0f19',
+              900: '#111827',
+              850: '#1a2234',
+              800: '#232d42',
+              700: '#334155',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #232d42; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+    .card-glow {
+      box-shadow: 0 0 30px rgba(249, 115, 22, 0.08), inset 0 0 0 1px rgba(249, 115, 22, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-night-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-flame-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Ambient Particle Canvas (Gentle bonfire sparks) -->
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+  <!-- Top Header Navigation -->
+  <header class="relative z-10 border-b border-night-800 bg-night-900/80 backdrop-blur-md sticky top-0 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-flame-500/20 border border-flame-500/40 flex items-center justify-center text-flame-400">
+        <i data-lucide="flame" class="w-5 h-5 animate-pulse"></i>
+      </div>
+      <div>
+        <h1 class="font-display font-bold text-sm sm:text-base text-amber-200 tracking-wide">BRITISH CULTURE DISCOVERY</h1>
+        <p class="text-xs text-slate-400 hidden sm:block">The Real Story of Guy Fawkes &amp; Bonfire Night</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <button id="btn-open-vocab" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-flame-500/30 bg-flame-500/10 hover:bg-flame-500/20 text-flame-300 text-xs sm:text-sm font-medium transition-all">
+        <i data-lucide="book-open" class="w-4 h-4"></i>
+        <span>Key Words &amp; Customs (<span id="vocab-count">10</span>)</span>
+      </button>
+      <button id="btn-sound-toggle" aria-label="Toggle sound fx" class="p-2 rounded-lg border border-night-700 bg-night-850 hover:bg-night-800 text-slate-400 hover:text-amber-200 transition-colors">
+        <i data-lucide="volume-2" id="sound-icon" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+
+    <!-- Screen 1: Welcome & Overview -->
+    <section id="screen-welcome" class="space-y-8 py-6 text-center animate-fadeIn">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-flame-500/30 bg-flame-950/40 text-flame-400 text-xs tracking-wider uppercase font-semibold">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        Interactive Cultural Guide
+      </div>
+
+      <div class="space-y-4 max-w-xl mx-auto">
+        <h2 class="font-display text-3xl sm:text-5xl font-extrabold text-amber-100 tracking-tight leading-tight">
+          Why Does Britain Light Fires in Autumn?
+        </h2>
+        <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-light">
+          Every autumn, communities across the UK gather in the dark around glowing bonfires, watch fireworks, and remember a dramatic event from over 400 years ago. Test your knowledge and uncover the story!
+        </p>
+      </div>
+
+      <!-- Quick Concept Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left text-xs sm:text-sm">
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">The 1605 Secret Plot</h3>
+            <p class="text-slate-400 text-xs mt-1">Discover what happened underneath the Houses of Parliament.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">Modern Celebrations</h3>
+            <p class="text-slate-400 text-xs mt-1">Learn about evening gatherings, warm food, and living customs.</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-night-900/90 border border-night-800 flex items-start space-x-3">
+          <div class="p-2 rounded-lg bg-flame-500/10 text-flame-400 shrink-0">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-200">Clear Explanations</h3>
+            <p class="text-slate-400 text-xs mt-1">Get immediate feedback and build your cultural vocabulary.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="pt-2">
+        <button id="btn-start" class="group relative inline-flex items-center justify-center px-8 py-4 text-base font-display font-bold text-night-950 bg-gradient-to-r from-amber-400 via-flame-400 to-amber-500 rounded-xl shadow-lg shadow-flame-600/30 hover:shadow-flame-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <span>Start the Quiz</span>
+          <i data-lucide="arrow-right" class="w-5 h-5 ml-2.5 transition-transform group-hover:translate-x-1"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 2: Active Question View -->
+    <section id="screen-quiz" class="hidden space-y-6">
+      
+      <!-- Progress Bar & Score -->
+      <div class="bg-night-900/80 border border-night-800 rounded-2xl p-4 backdrop-blur-md space-y-3">
+        <div class="flex items-center justify-between text-xs sm:text-sm">
+          <div class="flex items-center space-x-2">
+            <span id="badge-question-num" class="font-display font-bold text-amber-300">Question 1 of 10</span>
+            <span class="text-slate-600">•</span>
+            <span id="badge-theme" class="text-slate-400">British History &amp; Traditions</span>
+          </div>
+          <div class="flex items-center text-amber-300 font-semibold">
+            <i data-lucide="star" class="w-4 h-4 mr-1 text-amber-400"></i>
+            <span>Points: <span id="score-counter">0</span></span>
+          </div>
+        </div>
+        <div class="w-full bg-night-800 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-flame-500 transition-all duration-300 rounded-full" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-night-900/90 border border-night-800 rounded-2xl p-5 sm:p-7 card-glow space-y-5">
+        
+        <!-- Question Atmospheric Banner (Non-spoiler mood art) -->
+        <div class="rounded-xl overflow-hidden border border-night-700/70 bg-night-950 relative">
+          <div id="q-visual-container" class="h-48 sm:h-60 w-full relative overflow-hidden flex items-center justify-center bg-night-900">
+            <!-- Dynamically populated non-spoiler visual banner -->
+          </div>
+          <div class="absolute bottom-2 left-3 right-3 flex items-center justify-between pointer-events-none">
+            <span id="q-caption" class="text-xs text-slate-300 bg-night-950/85 px-2.5 py-1 rounded-md border border-night-700/70 backdrop-blur-md shadow-md">Atmosphere</span>
+          </div>
+        </div>
+
+        <!-- Question Title -->
+        <h2 id="q-title" class="font-display text-lg sm:text-2xl font-bold text-amber-50 leading-snug">
+          Question loading...
+        </h2>
+
+        <!-- Options List -->
+        <div id="options-container" class="space-y-3">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Explanation Drawer -->
+        <div id="explanation-box" class="hidden rounded-xl p-4 sm:p-5 border transition-all space-y-3">
+          <div class="flex items-center space-x-2 text-sm font-semibold" id="explanation-header">
+            <i id="explanation-icon" data-lucide="check-circle" class="w-5 h-5"></i>
+            <span id="explanation-status">Here is why:</span>
+          </div>
+          <p id="explanation-text" class="text-sm sm:text-base text-slate-300 leading-relaxed font-light">
+            Explanation text.
+          </p>
+
+          <!-- Vocabulary / Culture Note -->
+          <div class="pt-2 border-t border-night-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div class="flex items-center space-x-2 text-amber-300">
+              <i data-lucide="lightbulb" class="w-4 h-4 text-flame-400 shrink-0"></i>
+              <span>Word to know: <strong id="vocab-word" class="font-bold text-amber-200">bonfire</strong></span>
+              <span class="text-slate-500">—</span>
+              <span id="vocab-def" class="text-slate-300">a large outdoor fire made for celebration</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-end">
+            <button id="btn-next" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-flame-500 hover:from-amber-300 hover:to-flame-400 text-night-950 font-display font-bold text-sm shadow-md transition-all flex items-center space-x-2">
+              <span id="next-label">Next Question</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Screen 3: Results -->
+    <section id="screen-results" class="hidden space-y-8 py-6 text-center animate-fadeIn">
+      <div class="p-6 sm:p-10 rounded-2xl bg-night-900/90 border border-night-800 card-glow max-w-xl mx-auto space-y-6">
+        
+        <div class="inline-flex p-3 rounded-full bg-flame-500/10 border border-flame-500/30 text-amber-400 mx-auto">
+          <i data-lucide="award" class="w-9 h-9"></i>
+        </div>
+
+        <div class="space-y-2">
+          <span class="text-xs uppercase font-bold tracking-widest text-slate-400">Quiz Complete</span>
+          <h2 id="final-title" class="font-display text-2xl sm:text-3xl font-bold text-amber-100">
+            Great Job!
+          </h2>
+          <div class="text-4xl sm:text-6xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-flame-400 to-amber-500 my-3">
+            <span id="final-score">0</span><span class="text-2xl sm:text-3xl text-slate-500 font-light">/10</span>
+          </div>
+          <p id="final-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+            You now understand why British people celebrate on November 5th and what all the fireworks are about!
+          </p>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button id="btn-restart" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-flame-500 text-night-950 font-display font-bold text-sm transition-all flex items-center justify-center space-x-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span>Try Again</span>
+          </button>
+          <button id="btn-review-vocab-final" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-night-700 bg-night-850 hover:bg-night-800 text-slate-200 font-semibold text-sm transition-all flex items-center justify-center space-x-2">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>Review Customs &amp; Words</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-night-800 bg-night-950/80 text-center py-4 text-xs text-slate-400">
+    <p>A friendly look at British history, autumn festivals, and language.</p>
+  </footer>
+
+  <!-- Vocabulary Modal -->
+  <div id="modal-vocab" class="fixed inset-0 z-50 bg-night-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-night-900 border border-night-750 rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <div class="px-6 py-4 border-b border-night-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="book-open" class="w-5 h-5 text-flame-400"></i>
+          <h2 class="font-display font-bold text-lg text-amber-100">Key Words &amp; Traditions</h2>
+        </div>
+        <button id="btn-close-vocab" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-night-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-3.5 text-sm" id="vocab-items-container">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="px-6 py-3 border-t border-night-800 bg-night-950/50 flex justify-end">
+        <button id="btn-close-vocab-bottom" class="px-4 py-1.5 rounded-lg bg-night-800 hover:bg-night-700 text-slate-200 text-xs font-medium">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer -->
+  <script>
+    class SoundFx {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      }
+      playCorrect() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, t);
+          osc.frequency.exponentialRampToValueAtTime(880, t + 0.2);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.3);
+        } catch(e) {}
+      }
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, t);
+          osc.frequency.exponentialRampToValueAtTime(110, t + 0.25);
+          gain.gain.setValueAtTime(0.1, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.25);
+        } catch(e) {}
+      }
+    }
+    const sound = new SoundFx();
+  </script>
+
+  <!-- Quiz Data & Logic -->
+  <script>
+    // Atmospheric vector graphics that evoke the time and mood WITHOUT giving away specific question answers
+    const atmosphericIllustrations = {
+      autumnDusk: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="skyNov" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#090d16"/>
+              <stop offset="50%" stop-color="#1e1b4b"/>
+              <stop offset="85%" stop-color="#7c2d12"/>
+              <stop offset="100%" stop-color="#ea580c"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="400" fill="url(#skyNov)"/>
+          <circle cx="680" cy="90" r="28" fill="#fef08a" opacity="0.85"/>
+          <circle cx="688" cy="85" r="24" fill="#1e1b4b"/>
+          <!-- Starry specks -->
+          <circle cx="120" cy="50" r="1.5" fill="#fff" opacity="0.6"/>
+          <circle cx="280" cy="80" r="1.2" fill="#fff" opacity="0.7"/>
+          <circle cx="430" cy="40" r="1.5" fill="#fff" opacity="0.8"/>
+          <!-- British village rooftops & bare autumn trees -->
+          <path d="M0,400 L0,320 L50,300 L90,320 L160,310 L200,280 L230,315 L320,315 L350,290 L390,315 L480,310 L520,270 L550,310 L640,310 L680,295 L720,315 L800,310 L800,400 Z" fill="#090d16"/>
+          <!-- Bare autumn branches -->
+          <path d="M120,340 Q130,260 110,210 Q95,170 80,140 M110,210 Q140,180 160,160 M120,240 Q150,230 180,220" stroke="#060911" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M720,340 Q710,250 735,200 Q750,160 770,130 M735,200 Q700,170 680,150 M725,230 Q690,220 660,210" stroke="#060911" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <!-- Distant chimney smoke -->
+          <path d="M215,280 Q225,240 215,200 Q205,170 220,130" stroke="#cbd5e1" stroke-width="3" fill="none" opacity="0.25"/>
+          <path d="M535,270 Q545,235 535,195 Q525,160 540,120" stroke="#cbd5e1" stroke-width="3" fill="none" opacity="0.25"/>
+        </svg>
+      `,
+      westminsterPalace: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="fogRiver" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#090e17"/>
+              <stop offset="60%" stop-color="#141c2e"/>
+              <stop offset="100%" stop-color="#1e293b"/>
+            </linearGradient>
+            <radialGradient id="moonGlow" cx="50%" cy="30%" r="50%">
+              <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#090e17" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="url(#fogRiver)"/>
+          <circle cx="400" cy="120" r="200" fill="url(#moonGlow)"/>
+          <!-- River Thames Water in foreground -->
+          <polygon points="0,310 800,310 800,400 0,400" fill="#0b1120"/>
+          <line x1="100" y1="340" x2="250" y2="340" stroke="#334155" stroke-width="2" opacity="0.5"/>
+          <line x1="450" y1="360" x2="650" y2="360" stroke="#334155" stroke-width="2" opacity="0.5"/>
+          <line x1="300" y1="375" x2="480" y2="375" stroke="#334155" stroke-width="2" opacity="0.5"/>
+          <!-- Silhouette of historic Westminster hall, towers, spires -->
+          <g fill="#050811">
+            <rect x="180" y="210" width="440" height="100"/>
+            <!-- Spires and parapets -->
+            <polygon points="210,210 230,120 250,210"/>
+            <polygon points="280,210 295,150 310,210"/>
+            <polygon points="490,210 505,150 520,210"/>
+            <polygon points="550,210 570,120 590,210"/>
+            <!-- Great medieval hall roof -->
+            <polygon points="320,210 400,105 480,210"/>
+            <!-- Windows emitting tiny soft candlelight -->
+            <rect x="360" y="240" width="12" height="24" rx="6" fill="#f59e0b" opacity="0.4"/>
+            <rect x="428" y="240" width="12" height="24" rx="6" fill="#f59e0b" opacity="0.4"/>
+          </g>
+          <!-- Misty low cloud over water -->
+          <ellipse cx="400" cy="310" rx="360" ry="16" fill="#475569" opacity="0.3"/>
+        </svg>
+      `,
+      clandestineMeeting: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="tavernLight" cx="400" cy="220" r="260" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.55"/>
+              <stop offset="60%" stop-color="#78350f" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="#090d16"/>
+          <circle cx="400" cy="200" r="260" fill="url(#tavernLight)"/>
+          <!-- Timber wall beams of a 17th century inn -->
+          <rect x="0" y="320" width="800" height="80" fill="#17120e"/>
+          <line x1="160" y1="0" x2="160" y2="320" stroke="#1f1813" stroke-width="18"/>
+          <line x1="640" y1="0" x2="640" y2="320" stroke="#1f1813" stroke-width="18"/>
+          <line x1="0" y1="90" x2="800" y2="90" stroke="#1f1813" stroke-width="16"/>
+          <!-- Mysterious hooded cloak figures in deep shadow -->
+          <g fill="#05070d">
+            <!-- Left Cloak Silhouette -->
+            <path d="M220,320 L270,180 Q295,150 320,180 L350,320 Z"/>
+            <ellipse cx="295" cy="150" rx="26" ry="32"/>
+            <!-- Center Cloak Silhouette -->
+            <path d="M340,320 L380,160 Q400,130 420,160 L460,320 Z"/>
+            <ellipse cx="400" cy="135" rx="30" ry="36"/>
+            <!-- Right Cloak Silhouette -->
+            <path d="M470,320 L500,185 Q525,155 545,185 L585,320 Z"/>
+            <ellipse cx="522" cy="155" rx="26" ry="32"/>
+          </g>
+          <!-- Candle flame on table -->
+          <ellipse cx="400" cy="285" rx="4" ry="10" fill="#fef08a"/>
+          <ellipse cx="400" cy="287" rx="2" ry="5" fill="#fff"/>
+          <rect x="396" y="295" width="8" height="25" fill="#e2e8f0"/>
+        </svg>
+      `,
+      midnightSearch: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="torchCone" cx="320" cy="220" r="280" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#fde047" stop-opacity="0.8"/>
+              <stop offset="35%" stop-color="#ea580c" stop-opacity="0.45"/>
+              <stop offset="70%" stop-color="#451a03" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="#080c14"/>
+          <!-- Stone corridor arches -->
+          <path d="M100,400 L100,160 Q220,60 340,160 L340,400" fill="#131b2b"/>
+          <path d="M460,400 L460,160 Q580,60 700,160 L700,400" fill="#131b2b"/>
+          <polygon points="0,330 800,330 800,400 0,400" fill="#0d131f"/>
+          <!-- Dramatic light beam sweeping across floor -->
+          <circle cx="340" cy="230" r="240" fill="url(#torchCone)"/>
+          <!-- Long elongated shadow of a guard with halberd -->
+          <g fill="#020408">
+            <path d="M220,330 L280,390 L490,370 L480,350 L320,330 Z" opacity="0.75"/>
+            <!-- Silhouette of guard in doorway -->
+            <rect x="250" y="220" width="35" height="110"/>
+            <ellipse cx="267" cy="205" rx="16" ry="18"/>
+            <polygon points="255,190 280,190 267,165"/>
+            <!-- Spear line -->
+            <line x1="290" y1="140" x2="290" y2="330" stroke="#020408" stroke-width="4"/>
+          </g>
+          <!-- Closed heavy iron-studded oak door -->
+          <rect x="490" y="190" width="180" height="140" fill="#241b14" stroke="#140e0a" stroke-width="4"/>
+          <line x1="490" y1="230" x2="670" y2="230" stroke="#000" stroke-width="4"/>
+          <line x1="490" y1="290" x2="670" y2="290" stroke="#000" stroke-width="4"/>
+          <circle cx="510" cy="260" r="6" fill="#000"/>
+        </svg>
+      `,
+      secrecyCorridor: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="vaultGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#020617"/>
+              <stop offset="50%" stop-color="#1e293b"/>
+              <stop offset="100%" stop-color="#020617"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="400" fill="#070a12"/>
+          <!-- Tunnel Perspective -->
+          <polygon points="0,0 800,0 520,180 280,180" fill="#0f172a"/>
+          <polygon points="0,400 800,400 520,240 280,240" fill="#1e293b"/>
+          <polygon points="0,0 280,180 280,240 0,400" fill="#090d16"/>
+          <polygon points="800,0 520,180 520,240 800,400" fill="#0d131f"/>
+          <!-- Distant doorway crack of warm light -->
+          <rect x="385" y="185" width="30" height="50" fill="#fef08a"/>
+          <!-- Lone dark figure silhouetted against the bright crack -->
+          <path d="M394,235 L397,205 Q400,195 403,205 L406,235 Z" fill="#000"/>
+          <circle cx="400" cy="195" r="4" fill="#000"/>
+          <!-- Stone pavers -->
+          <line x1="280" y1="240" x2="0" y2="400" stroke="#334155" stroke-width="2"/>
+          <line x1="520" y1="240" x2="800" y2="400" stroke="#334155" stroke-width="2"/>
+        </svg>
+      `,
+      historicScroll: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="parchmentWarm" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stop-color="#fed7aa"/>
+              <stop offset="60%" stop-color="#d97706"/>
+              <stop offset="100%" stop-color="#1c1917"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="#0c0a09"/>
+          <!-- Aged Scroll background -->
+          <g transform="translate(180, 50)">
+            <rect x="0" y="0" width="440" height="300" rx="12" fill="url(#parchmentWarm)" stroke="#78350f" stroke-width="4" filter="drop-shadow(0 15px 25px rgba(0,0,0,0.8))"/>
+            <!-- Stylized lines representing an old poem or manuscript -->
+            <line x1="60" y1="60" x2="380" y2="60" stroke="#451a03" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+            <line x1="90" y1="90" x2="350" y2="90" stroke="#451a03" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+            <line x1="70" y1="140" x2="370" y2="140" stroke="#451a03" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+            <line x1="100" y1="170" x2="340" y2="170" stroke="#451a03" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+            <line x1="60" y1="220" x2="380" y2="220" stroke="#451a03" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+            <line x1="110" y1="250" x2="330" y2="250" stroke="#451a03" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+            <!-- Antique decorative crest watermark -->
+            <circle cx="220" cy="150" r="60" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="8,6" opacity="0.4"/>
+          </g>
+        </svg>
+      `,
+      autumnTownGathering: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="distantGlow" cx="50%" cy="100%" r="80%">
+              <stop offset="0%" stop-color="#ea580c" stop-opacity="0.7"/>
+              <stop offset="50%" stop-color="#7c2d12" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="#0b0f19"/>
+          <!-- Distant warm community light on horizon -->
+          <circle cx="400" cy="380" r="340" fill="url(#distantGlow)"/>
+          <!-- Cobblestone street & old English brick buildings -->
+          <polygon points="0,320 800,320 800,400 0,400" fill="#1a2234"/>
+          <g fill="#0c1220">
+            <!-- Left Tudor House -->
+            <polygon points="40,320 40,160 120,90 200,160 200,320"/>
+            <!-- Right Tudor House -->
+            <polygon points="600,320 600,150 680,80 760,150 760,320"/>
+          </g>
+          <!-- Townspeople walking together in coats and scarves -->
+          <g fill="#070c18">
+            <ellipse cx="360" cy="275" rx="10" ry="12"/>
+            <path d="M348,340 L355,290 L365,290 L372,340 Z"/>
+            
+            <ellipse cx="400" cy="270" rx="11" ry="13"/>
+            <path d="M386,340 L394,285 L406,285 L414,340 Z"/>
+
+            <ellipse cx="435" cy="285" rx="8" ry="10"/>
+            <path d="M425,340 L430,298 L440,298 L445,340 Z"/>
+          </g>
+          <!-- Street lamp post glow -->
+          <circle cx="270" cy="210" r="40" fill="#fef08a" opacity="0.3"/>
+          <ellipse cx="270" cy="210" rx="6" ry="8" fill="#fef08a"/>
+          <line x1="270" y1="218" x2="270" y2="340" stroke="#000" stroke-width="4"/>
+        </svg>
+      `,
+      autumnHarvestFlavours: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="autumnWarmth" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#451a03"/>
+              <stop offset="60%" stop-color="#1c1917"/>
+              <stop offset="100%" stop-color="#0c0a09"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="url(#autumnWarmth)"/>
+          <!-- Cozy wooden table setting with autumn leaves & warmth -->
+          <ellipse cx="400" cy="280" rx="340" ry="100" fill="#291609" stroke="#542e13" stroke-width="5"/>
+          <!-- Fallen golden autumn leaves on table -->
+          <g fill="#ea580c" opacity="0.7">
+            <path d="M180,260 Q210,240 230,265 Q205,280 180,260 Z"/>
+            <path d="M260,290 Q290,270 310,295 Q285,310 260,290 Z" fill="#d97706"/>
+            <path d="M530,270 Q560,250 580,275 Q555,290 530,270 Z" fill="#b45309"/>
+            <path d="M600,295 Q630,275 650,300 Q625,315 600,295 Z" fill="#f59e0b"/>
+          </g>
+          <!-- Steaming hot mugs on the table -->
+          <g transform="translate(360, 180)">
+            <rect x="0" y="20" width="80" height="70" rx="10" fill="#78350f" stroke="#9a3412" stroke-width="3"/>
+            <!-- Handle -->
+            <path d="M80,35 Q105,55 80,75" stroke="#9a3412" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <!-- Steam swirls -->
+            <path d="M25,10 Q15,-10 30,-30" stroke="#fef3c7" stroke-width="3" fill="none" opacity="0.45" stroke-linecap="round"/>
+            <path d="M55,10 Q65,-10 50,-30" stroke="#fef3c7" stroke-width="3" fill="none" opacity="0.45" stroke-linecap="round"/>
+          </g>
+        </svg>
+      `,
+      parliamentStateOpening: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="royalHalls" cx="50%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#312e81"/>
+              <stop offset="50%" stop-color="#1e1b4b"/>
+              <stop offset="100%" stop-color="#020617"/>
+            </radialGradient>
+          </defs>
+          <rect width="800" height="400" fill="url(#royalHalls)"/>
+          <!-- Stately Gothic Westminster Hall Interior Arches -->
+          <path d="M120,400 L120,120 Q260,20 400,120 L400,400" fill="none" stroke="#4338ca" stroke-width="12" opacity="0.4"/>
+          <path d="M400,400 L400,120 Q540,20 680,120 L680,400" fill="none" stroke="#4338ca" stroke-width="12" opacity="0.4"/>
+          <!-- Royal Red Carpet Procession Path -->
+          <polygon points="340,400 460,400 420,240 380,240" fill="#991b1b"/>
+          <line x1="380" y1="240" x2="340" y2="400" stroke="#facc15" stroke-width="2"/>
+          <line x1="420" y1="240" x2="460" y2="400" stroke="#facc15" stroke-width="2"/>
+          <!-- Grand chandelier glow -->
+          <circle cx="400" cy="90" r="14" fill="#fef08a"/>
+          <circle cx="400" cy="90" r="70" fill="#fef08a" opacity="0.2"/>
+        </svg>
+      `,
+      modernCityLights: `
+        <svg class="w-full h-full object-cover" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cityNight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#020617"/>
+              <stop offset="70%" stop-color="#0f172a"/>
+              <stop offset="100%" stop-color="#1e1b4b"/>
+            </linearGradient>
+          </defs>
+          <rect width="800" height="400" fill="url(#cityNight)"/>
+          <!-- Contemporary London Skyline Silhouette -->
+          <g fill="#0b0f19">
+            <!-- Modern towers -->
+            <polygon points="120,400 120,240 180,210 240,240 240,400"/>
+            <rect x="270" y="160" width="60" height="240"/>
+            <!-- St Paul's Cathedral dome silhouette -->
+            <path d="M370,400 L370,260 Q430,190 490,260 L490,400 Z"/>
+            <ellipse cx="430" cy="190" rx="35" ry="30"/>
+            <rect x="520" y="180" width="70" height="220"/>
+            <polygon points="630,400 670,120 710,400"/>
+          </g>
+          <!-- Modern neon light reflections on pavement/river -->
+          <ellipse cx="430" cy="385" rx="300" ry="12" fill="#38bdf8" opacity="0.25"/>
+          <ellipse cx="260" cy="375" rx="140" ry="8" fill="#f43f5e" opacity="0.2"/>
+        </svg>
+      `
+    };
+
+    // Quiz Questions: Now paired with general atmospheric scenes that set the mood without giving away the correct answers!
+    const quizData = [
+      {
+        id: 1,
+        theme: "The Famous Date",
+        visualKey: "autumnDusk",
+        caption: "Autumn twilight in Britain as the colder November nights begin",
+        question: "On which date do people across the United Kingdom celebrate Guy Fawkes Night (also known as Bonfire Night)?",
+        options: [
+          { text: "October 31st", correct: false },
+          { text: "November 5th", correct: true },
+          { text: "December 25th", correct: false },
+          { text: "January 1st", correct: false }
+        ],
+        explanation: "Bonfire Night is always celebrated on November 5th. It marks the day in 1605 when a plot to destroy the British Parliament was discovered and stopped.",
+        vocab: {
+          word: "Bonfire",
+          definition: "A large outdoor fire made for celebration or burning unwanted wood."
+        }
+      },
+      {
+        id: 2,
+        theme: "The Secret Plan",
+        visualKey: "westminsterPalace",
+        caption: "The historic Palace of Westminster beside the River Thames at night",
+        question: "What were the conspirators planning to do in London in November 1605?",
+        options: [
+          { text: "Steal the royal jewels from the Tower of London", correct: false },
+          { text: "Blow up the Houses of Parliament and kill King James I", correct: true },
+          { text: "Burn down London Bridge to stop trade", correct: false },
+          { text: "Escape to France on a stolen royal warship", correct: false }
+        ],
+        explanation: "A small group of Catholic plotters placed 36 barrels of gunpowder in the cellars directly under the House of Lords. Their goal was to blow up King James I and the government during the opening ceremony.",
+        vocab: {
+          word: "Plot",
+          definition: "A secret plan made by a group of people to do something illegal or harmful."
+        }
+      },
+      {
+        id: 3,
+        theme: "Who was Guy Fawkes?",
+        visualKey: "clandestineMeeting",
+        caption: "A clandestine meeting in Jacobean London, where secret schemes were devised",
+        question: "Even though Guy Fawkes is the most famous face of the plot, who was the real leader and mastermind of the group?",
+        options: [
+          { text: "Robert Catesby", correct: true },
+          { text: "William Shakespeare", correct: false },
+          { text: "Oliver Cromwell", correct: false },
+          { text: "Sir Walter Raleigh", correct: false }
+        ],
+        explanation: "Robert Catesby planned and led the conspiracy. Guy Fawkes was chosen to guard the explosives and light the fuse because he had years of military experience with gunpowder.",
+        vocab: {
+          word: "Mastermind",
+          definition: "The person who plans and organizes a complicated project or scheme."
+        }
+      },
+      {
+        id: 4,
+        theme: "How It Was Discovered",
+        visualKey: "secrecyCorridor",
+        caption: "Shadowy corridors of 17th-century Westminster, where quiet warnings circulated",
+        question: "How did the King's guards find out about the hidden barrels of gunpowder before it was too late?",
+        options: [
+          { text: "One of the barrels accidentally exploded early", correct: false },
+          { text: "A secret warning letter was sent to a member of Parliament", correct: true },
+          { text: "Guy Fawkes lost his keys in the street outside", correct: false },
+          { text: "A police dog discovered the smell of gunpowder", correct: false }
+        ],
+        explanation: "Someone sent an anonymous letter to Lord Monteagle, warning him not to attend Parliament because 'they shall receive a terrible blow'. Monteagle showed the letter to the King's ministers, who then searched the basements.",
+        vocab: {
+          word: "Anonymous",
+          definition: "Made or done by someone whose name is not known or kept secret."
+        }
+      },
+      {
+        id: 5,
+        theme: "The Capture",
+        visualKey: "midnightSearch",
+        caption: "A midnight guard patrol inspecting the stone vaults beneath government halls",
+        question: "What was Guy Fawkes carrying when the guards caught him in the cellar around midnight on November 5th?",
+        options: [
+          { text: "A royal crown and a bag of gold", correct: false },
+          { text: "A lantern, a pocket watch, and matches to light the gunpowder", correct: true },
+          { text: "A sword and a map of London's escape tunnels", correct: false },
+          { text: "A disguise dressed as a palace chef", correct: false }
+        ],
+        explanation: "Guards caught Fawkes dressed in boots and a cloak, holding a lantern and matches, ready to light the fuse when Parliament opened later that morning.",
+        vocab: {
+          word: "Cellar",
+          definition: "An underground room below a building, often used for storage."
+        }
+      },
+      {
+        id: 6,
+        theme: "Popular Nursery Rhymes",
+        visualKey: "historicScroll",
+        caption: "An ancient British manuscript preserving oral verses across the centuries",
+        question: "Which famous line begins the traditional English poem recited about this event?",
+        options: [
+          { text: "\"Ring around the rosy, a pocket full of posies...\"", correct: false },
+          { text: "\"Remember, remember, the fifth of November...\"", correct: true },
+          { text: "\"London Bridge is falling down, falling down...\"", correct: false },
+          { text: "\"Humpty Dumpty sat on a wall...\"", correct: false }
+        ],
+        explanation: "The poem begins: 'Remember, remember, the fifth of November, gunpowder, treason and plot.' It has been spoken across Britain for over 400 years.",
+        vocab: {
+          word: "Treason",
+          definition: "The crime of betraying your country or attempting to overthrow your ruler."
+        }
+      },
+      {
+        id: 7,
+        theme: "Old Bonfire Customs",
+        visualKey: "autumnTownGathering",
+        caption: "Neighbourhoods preparing for their evening community autumn gatherings",
+        question: "In the past, children made a model of Guy Fawkes out of old clothes and straw. What did they ask passersby in the street?",
+        options: [
+          { text: "\"Trick or treat!\"", correct: false },
+          { text: "\"A penny for the Guy!\"", correct: true },
+          { text: "\"Merry November!\"", correct: false },
+          { text: "\"Spare a coat for the King!\"", correct: false }
+        ],
+        explanation: "Children used to wheel their handmade model through the streets chanting 'A penny for the Guy!' They used the collected coins to buy fireworks for the bonfire that evening.",
+        vocab: {
+          word: "Effigy",
+          definition: "A rough model or dummy of a person, often burned on a fire during a festival."
+        }
+      },
+      {
+        id: 8,
+        theme: "Traditional Festive Food",
+        visualKey: "autumnHarvestFlavours",
+        caption: "Warm comfort treats prepared for chilly outdoor British autumn nights",
+        question: "Which warm, sticky sweet treat is traditionally eaten by families on Bonfire Night?",
+        options: [
+          { text: "Toffee apples and parkin cake (ginger cake)", correct: true },
+          { text: "Cold ice cream and strawberries", correct: false },
+          { text: "Pancakes with lemon and sugar", correct: false },
+          { text: "Hot cross buns", correct: false }
+        ],
+        explanation: "Because November evenings in Britain are cold and dark, people stay warm by eating jacket potatoes baked in the fire embers, sticky toffee apples, and Yorkshire parkin (a rich cake made with oatmeal and ginger).",
+        vocab: {
+          word: "Tradition",
+          definition: "A belief, custom, or way of celebrating that has been passed down for generations."
+        }
+      },
+      {
+        id: 9,
+        theme: "A Living British Tradition",
+        visualKey: "parliamentStateOpening",
+        caption: "The ceremonial halls of Parliament prepared for the annual State Opening",
+        question: "What ceremonial action do royal guards still perform in Parliament before the King or Queen opens the new parliamentary year?",
+        options: [
+          { text: "They fire miniature fireworks from the roof of Big Ben", correct: false },
+          { text: "They search the cellars with lanterns to make sure no explosives are hidden", correct: true },
+          { text: "They lock all politicians in a room until everyone agrees", correct: false },
+          { text: "They hand out gunpowder to members of Parliament", correct: false }
+        ],
+        explanation: "Even today, before the State Opening of Parliament, royal bodyguards known as the Yeomen of the Guard walk through the cellars with lanterns. It is now a historic ceremony, but it began after Guy Fawkes was caught in 1605.",
+        vocab: {
+          word: "Ceremony",
+          definition: "A formal public event with traditional rules and actions."
+        }
+      },
+      {
+        id: 10,
+        theme: "Pop Culture & Modern Masks",
+        visualKey: "modernCityLights",
+        caption: "Contemporary London at night, where historic folklore blends with modern pop culture",
+        question: "Where might you recognize the smiling, mustachioed mask of Guy Fawkes in modern pop culture?",
+        options: [
+          { text: "In superhero comic books and the film 'V for Vendetta'", correct: true },
+          { text: "As the official logo of the London Underground", correct: false },
+          { text: "On the back of the British £1 coin", correct: false },
+          { text: "As the mascot for the British Olympic team", correct: false }
+        ],
+        explanation: "The famous mask with the pointed mustache was drawn for the graphic novel and movie 'V for Vendetta'. Today, it has become a worldwide symbol worn by protest groups and internet activists.",
+        vocab: {
+          word: "Symbol",
+          definition: "An image, object, or sign that represents an idea or belief."
+        }
+      }
+    ];
+
+    const vocabList = [
+      { word: "Bonfire", def: "A large outdoor fire built to burn wood and celebrate autumn festivals." },
+      { word: "Plot", def: "A secret plan made by a group to do something dangerous or illegal." },
+      { word: "Mastermind", def: "The person who plans and directs a complicated operation." },
+      { word: "Effigy", def: "A model or dummy of a person, traditionally burned on the fire." },
+      { word: "Treason", def: "The serious crime of trying to harm the monarch or overthrow the state." },
+      { word: "Cellar", def: "An underground storage space beneath a historic building." },
+      { word: "Anonymous", def: "Written or done by someone who does not give their name." },
+      { word: "Tradition", def: "A custom or festival celebrated regularly over many generations." },
+      { word: "Ceremony", def: "A formal historical event with fixed rituals and uniforms." },
+      { word: "Symbol", def: "A recognizable image or object that stands for a bigger idea." }
+    ];
+
+    // State
+    let currentIndex = 0;
+    let score = 0;
+    let hasAnswered = false;
+
+    // Elements
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenQuiz = document.getElementById('screen-quiz');
+    const screenResults = document.getElementById('screen-results');
+
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnNext = document.getElementById('btn-next');
+    const nextLabel = document.getElementById('next-label');
+
+    const badgeQuestionNum = document.getElementById('badge-question-num');
+    const badgeTheme = document.getElementById('badge-theme');
+    const scoreCounter = document.getElementById('score-counter');
+    const progressBar = document.getElementById('progress-bar');
+
+    const qVisualContainer = document.getElementById('q-visual-container');
+    const qCaption = document.getElementById('q-caption');
+    const qTitle = document.getElementById('q-title');
+    const optionsContainer = document.getElementById('options-container');
+
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationHeader = document.getElementById('explanation-header');
+    const explanationStatus = document.getElementById('explanation-status');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const explanationText = document.getElementById('explanation-text');
+    const vocabWord = document.getElementById('vocab-word');
+    const vocabDef = document.getElementById('vocab-def');
+
+    // Vocab Modal
+    const modalVocab = document.getElementById('modal-vocab');
+    const btnOpenVocab = document.getElementById('btn-open-vocab');
+    const btnCloseVocab = document.getElementById('btn-close-vocab');
+    const btnCloseVocabBottom = document.getElementById('btn-close-vocab-bottom');
+    const btnReviewVocabFinal = document.getElementById('btn-review-vocab-final');
+    const vocabItemsContainer = document.getElementById('vocab-items-container');
+    const vocabCount = document.getElementById('vocab-count');
+
+    // Audio
+    const btnSoundToggle = document.getElementById('btn-sound-toggle');
+    const soundIcon = document.getElementById('sound-icon');
+
+    function initVocab() {
+      vocabCount.innerText = vocabList.length;
+      vocabItemsContainer.innerHTML = vocabList.map(item => `
+        <div class="p-3.5 rounded-xl bg-night-850 border border-night-750">
+          <div class="font-display font-bold text-amber-300 text-base mb-1">${item.word}</div>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">${item.def}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderQuestion(index) {
+      hasAnswered = false;
+      const q = quizData[index];
+
+      badgeQuestionNum.innerText = `Question ${index + 1} of ${quizData.length}`;
+      badgeTheme.innerText = q.theme;
+      scoreCounter.innerText = score;
+      progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+
+      // Render non-spoiler atmospheric vector artwork
+      const atmosphericSvg = atmosphericIllustrations[q.visualKey] || atmosphericIllustrations.autumnDusk;
+      qVisualContainer.innerHTML = `
+        <div class="w-full h-full relative">
+          <div class="w-full h-full">
+            ${atmosphericSvg}
+          </div>
+          <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-night-950/80 via-transparent to-transparent"></div>
+        </div>
+      `;
+
+      qCaption.innerText = q.caption;
+      qTitle.innerText = q.question;
+
+      explanationBox.classList.add('hidden');
+      explanationBox.classList.remove('bg-emerald-950/40', 'border-emerald-600/50', 'bg-rose-950/40', 'border-rose-600/50');
+
+      optionsContainer.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((opt, optIndex) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full text-left p-3.5 sm:p-4 rounded-xl border border-night-800 bg-night-850 hover:bg-night-800 hover:border-flame-500/50 transition-all flex items-start space-x-3.5 group`;
+        btn.setAttribute('data-correct', opt.correct);
+
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-lg bg-night-900 border border-night-700 flex items-center justify-center text-xs font-bold font-display text-amber-300 shrink-0 mt-0.5">
+            ${letters[optIndex]}
+          </span>
+          <span class="text-sm sm:text-base text-slate-200 group-hover:text-amber-100 flex-1 leading-snug">
+            ${opt.text}
+          </span>
+          <div class="feedback-indicator hidden shrink-0 ml-2"></div>
+        `;
+
+        btn.addEventListener('click', () => chooseOption(btn, opt.correct, q));
+        optionsContainer.appendChild(btn);
+      });
+
+      nextLabel.innerText = (index === quizData.length - 1) ? "See Your Results" : "Next Question";
+      lucide.createIcons();
+    }
+
+    function chooseOption(selectedBtn, isCorrect, currentQ) {
+      if (hasAnswered) return;
+      hasAnswered = true;
+
+      const allBtns = optionsContainer.querySelectorAll('.option-btn');
+
+      if (isCorrect) {
+        score++;
+        scoreCounter.innerText = score;
+        sound.playCorrect();
+
+        selectedBtn.classList.remove('bg-night-850', 'border-night-800');
+        selectedBtn.classList.add('bg-emerald-950/70', 'border-emerald-500', 'text-white');
+        const indicator = selectedBtn.querySelector('.feedback-indicator');
+        indicator.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-emerald-400"></i>';
+        indicator.classList.remove('hidden');
+
+        explanationBox.classList.remove('hidden');
+        explanationBox.classList.add('bg-emerald-950/30', 'border-emerald-600/40');
+        explanationHeader.className = "flex items-center space-x-2 text-sm font-semibold text-emerald-300";
+        explanationStatus.innerText = "That's right!";
+        explanationIcon.setAttribute('data-lucide', 'check-circle');
+
+        try {
+          confetti({
+            particleCount: 30,
+            spread: 50,
+            origin: { y: 0.7 },
+            colors: ['#ea580c', '#f59e0b', '#10b981']
+          });
+        } catch(e) {}
+      } else {
+        sound.playWrong();
+
+        selectedBtn.classList.remove('bg-night-850', 'border-night-800');
+        selectedBtn.classList.add('bg-rose-950/70', 'border-rose-500', 'text-white');
+        const indicator = selectedBtn.querySelector('.feedback-indicator');
+        indicator.innerHTML = '<i data-lucide="x" class="w-5 h-5 text-rose-400"></i>';
+        indicator.classList.remove('hidden');
+
+        // Reveal correct answer
+        allBtns.forEach(btn => {
+          if (btn.getAttribute('data-correct') === 'true') {
+            btn.classList.add('bg-emerald-950/40', 'border-emerald-500/70', 'ring-1', 'ring-emerald-500/50');
+            const trueIndicator = btn.querySelector('.feedback-indicator');
+            trueIndicator.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>';
+            trueIndicator.classList.remove('hidden');
+          }
+        });
+
+        explanationBox.classList.remove('hidden');
+        explanationBox.classList.add('bg-rose-950/20', 'border-rose-700/40');
+        explanationHeader.className = "flex items-center space-x-2 text-sm font-semibold text-rose-300";
+        explanationStatus.innerText = "Good try! Here is what happened:";
+        explanationIcon.setAttribute('data-lucide', 'help-circle');
+      }
+
+      allBtns.forEach(btn => btn.classList.add('cursor-default'));
+      explanationText.innerText = currentQ.explanation;
+      vocabWord.innerText = currentQ.vocab.word;
+      vocabDef.innerText = currentQ.vocab.definition;
+
+      lucide.createIcons();
+    }
+
+    function goToNext() {
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      screenQuiz.classList.add('hidden');
+      screenResults.classList.remove('hidden');
+
+      const finalScore = document.getElementById('final-score');
+      const finalTitle = document.getElementById('final-title');
+      const finalDesc = document.getElementById('final-desc');
+
+      finalScore.innerText = score;
+
+      if (score >= 9) {
+        finalTitle.innerText = "Bonfire Night Expert!";
+        finalDesc.innerText = "Outstanding! You know all the key facts about Guy Fawkes, the gunpowder plot, and how British people celebrate today.";
+        try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
+      } else if (score >= 6) {
+        finalTitle.innerText = "Great Knowledge!";
+        finalDesc.innerText = "You have a clear understanding of Britain's most famous autumn tradition and the story behind it.";
+      } else {
+        finalTitle.innerText = "Good First Attempt!";
+        finalDesc.innerText = "Now you know why fireworks light up the sky every November 5th. Take the quiz once more to lock in what you've learned!";
+      }
+
+      lucide.createIcons();
+    }
+
+    // Sparkles & Embers Animation
+    function initCanvas() {
+      const canvas = document.getElementById('ambient-canvas');
+      const ctx = canvas.getContext('2d');
+      let w, h;
+      let sparks = [];
+
+      function setSize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', setSize);
+      setSize();
+
+      class Spark {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * w;
+          this.y = h + Math.random() * 40;
+          this.size = Math.random() * 2.5 + 1;
+          this.speedY = Math.random() * 1.2 + 0.4;
+          this.speedX = (Math.random() - 0.5) * 0.7;
+          this.alpha = Math.random() * 0.7 + 0.3;
+          this.hue = Math.random() > 0.4 ? 28 : 42;
+        }
+        update() {
+          this.y -= this.speedY;
+          this.x += this.speedX;
+          this.alpha -= 0.003;
+          if (this.alpha <= 0 || this.y < -10) this.reset();
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 95%, 55%, ${this.alpha})`;
+          ctx.fill();
+        }
+      }
+
+      const sparkCount = Math.min(Math.floor(window.innerWidth / 18), 45);
+      for (let i = 0; i < sparkCount; i++) sparks.push(new Spark());
+
+      function loop() {
+        ctx.clearRect(0, 0, w, h);
+        sparks.forEach(s => { s.update(); s.draw(); });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    // Handlers
+    btnStart.addEventListener('click', () => {
+      sound.init();
+      screenWelcome.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+      renderQuestion(0);
+    });
+
+    btnNext.addEventListener('click', goToNext);
+
+    btnRestart.addEventListener('click', () => {
+      score = 0;
+      currentIndex = 0;
+      screenResults.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+      renderQuestion(0);
+    });
+
+    function openVocab() {
+      modalVocab.classList.remove('hidden');
+      modalVocab.classList.add('flex');
+    }
+    function closeVocab() {
+      modalVocab.classList.add('hidden');
+      modalVocab.classList.remove('flex');
+    }
+
+    btnOpenVocab.addEventListener('click', openVocab);
+    btnCloseVocab.addEventListener('click', closeVocab);
+    btnCloseVocabBottom.addEventListener('click', closeVocab);
+    btnReviewVocabFinal.addEventListener('click', openVocab);
+    modalVocab.addEventListener('click', (e) => {
+      if (e.target === modalVocab) closeVocab();
+    });
+
+    btnSoundToggle.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      if (sound.enabled) {
+        soundIcon.setAttribute('data-lucide', 'volume-2');
+        soundIcon.classList.remove('text-red-400');
+      } else {
+        soundIcon.setAttribute('data-lucide', 'volume-x');
+        soundIcon.classList.add('text-red-400');
+      }
+      lucide.createIcons();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initVocab();
+      initCanvas();
+    });
+  </script>
+</body>
+</html>
